@@ -16,6 +16,7 @@ module Services
 
   def self.email_provider
     provider = EmailAlertAPI.config.email_service.fetch(:provider)
+    return EmailSenderService::SendGridSender.new if provider == "SENDGRID"
     return EmailSenderService::Notify.new if provider == "NOTIFY"
     return EmailSenderService::Pseudo.new if provider == "PSEUDO" || provider.nil?
     raise "Email service provider #{provider} does not exist"
