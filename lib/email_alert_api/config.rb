@@ -27,6 +27,10 @@ module EmailAlertAPI
       @email_service ||= email_service_config.symbolize_keys.freeze
     end
 
+    def sendgrid
+      @sendgrid ||= sendgrid_environment_config.symbolize_keys.freeze
+    end
+
   private
 
     def redis_config_path
@@ -55,6 +59,14 @@ module EmailAlertAPI
 
     def email_service_config
       YAML.safe_load(ERB.new(File.read(email_service_config_path)).result).fetch(@environment)
+    end
+
+    def sendgrid_config_path
+      File.join(app_root, "config", "sendgrid.yml")
+    end
+
+    def sendgrid_environment_config
+      YAML.safe_load(ERB.new(File.read(sendgrid_config_path)).result).fetch(@environment)
     end
   end
 end
