@@ -18,6 +18,8 @@ gem 'sidekiq-symbols', '~> 0.1'
 gem 'statsd-ruby', '1.4.0'
 gem 'unicorn', '5.3.0'
 
+gem 'sendgrid-ruby'
+
 group :test do
   gem 'equivalent-xml'
   gem 'factory_girl_rails'
