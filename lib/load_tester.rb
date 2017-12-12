@@ -1,6 +1,6 @@
 class LoadTester
   def initialize
-    #enable_logging
+    enable_logging
   end
 
   def self.test_delivery_request_worker(number)
@@ -35,7 +35,7 @@ class LoadTester
     create_subscription_contents(subscriptions: subscriptions, content_change: content_change)
 
     puts "Running service"
-    duration = Benchmark.measure { EmailGenerationService.call }
+    duration = Benchmark.measure { EmailGenerationService.generate_for_content_change(content_change) }
     puts "Took #{duration}"
   end
 

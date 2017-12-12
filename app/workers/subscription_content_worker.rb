@@ -21,11 +21,10 @@ private
 
       begin
         SubscriptionContent.import!(records)
+        EmailGenerationService.for_content_change(content_change)
       rescue StandardError => ex
         Raven.capture_exception(ex, tags: { version: 2 })
       end
-
-      EmailGenerationWorker.perform_async
     end
   end
 

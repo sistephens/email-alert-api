@@ -1,13 +1,25 @@
 class EmailGenerationService
   LOCK_NAME = "email_generation_worker".freeze
 
-  def self.call(*args)
-    new.call(*args)
+  def self.generate_all_unsent(content_change)
+    new.call(default_scope)
   end
 
-  def call
+  def self.generate_for_content_change(content_change)
+    new.call(default_scope.where(content_change: content_change))
+  end
+
+  def self.default_scope
+    scope = SubscriptionContent
+      .joins(:content_change, subscription: { subscriber: { subscriptions: :subscriber_list } })
+      .includes(:content_change, subscription: { subscriber: { subscriptions: :subscriber_list } })
+      .where.not(subscribers: { address: nil })
+      .where(email: nil)
+  end
+
+  def call(scope)
     ensure_only_running_once do
-      subscription_contents.find_in_batches do |group|
+      scope.find_in_batches do |group|
         to_queue = []
 
         SubscriptionContent.transaction do
@@ -44,14 +56,6 @@ private
         email_id, priority: priority
       )
     end
-  end
-
-  def subscription_contents
-    SubscriptionContent
-      .joins(:content_change, subscription: { subscriber: { subscriptions: :subscriber_list } })
-      .includes(:content_change, subscription: { subscriber: { subscriptions: :subscriber_list } })
-      .where.not(subscribers: { address: nil })
-      .where(email: nil)
   end
 
   def build_many_emails(subscription_contents)
