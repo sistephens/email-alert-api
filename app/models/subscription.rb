@@ -2,6 +2,9 @@ class Subscription < ApplicationRecord
   belongs_to :subscriber
   belongs_to :subscriber_list
 
+  has_many :subscription_contents
+  has_many :unprocessed_subscription_contents, -> { where(email_id: nil) }, class_name: "SubscriptionContent"
+
   enum frequency: { immediately: 0, daily: 1, weekly: 2 }
 
   before_validation :set_uuid

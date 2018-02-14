@@ -9,6 +9,8 @@ class Subscriber < ApplicationRecord
   has_many :digest_run_subscribers, dependent: :destroy
   has_many :digest_runs, through: :digest_run_subscribers
 
+  has_many :unprocessed_subscription_contents, through: :subscriptions
+
   def nullify_address!
     update!(address: nil)
   end
