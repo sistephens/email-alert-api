@@ -1,7 +1,6 @@
 class SubscribersForImmediateEmailQuery
   def self.call
     Subscriber
-      .includes(subscriptions: :unprocessed_subscription_contents)
       .where(
         SubscriptionContent
           .joins(:subscription)
