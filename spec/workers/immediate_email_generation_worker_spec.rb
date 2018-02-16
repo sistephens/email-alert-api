@@ -36,6 +36,40 @@ RSpec.describe ImmediateEmailGenerationWorker do
           content_change: content_change
         )
 
+        subscriber_three = create(:subscriber)
+        subscription_three = create(:subscription, subscriber: subscriber_three)
+        subscription_four = create(:subscription, subscriber: subscriber_three)
+        content_change = create(:content_change)
+
+        create(
+          :subscription_content,
+          subscription: subscription_three,
+          content_change: content_change
+        )
+
+        create(
+          :subscription_content,
+          subscription: subscription_four,
+          content_change: content_change
+        )
+
+        subscriber_five = create(:subscriber)
+        subscription_five = create(:subscription, subscriber: subscriber_five)
+        subscription_six = create(:subscription, subscriber: subscriber_five)
+        content_change = create(:content_change)
+
+        create(
+          :subscription_content,
+          subscription: subscription_five,
+          content_change: content_change
+        )
+
+        create(
+          :subscription_content,
+          subscription: subscription_six,
+          content_change: content_change
+        )
+        logger.info "*****************************SETUP DONE*********************"
         described_class.new.perform
 
         expect(Email.count).to eq(1)

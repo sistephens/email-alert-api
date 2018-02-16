@@ -11,9 +11,16 @@ class ImmediateEmailGenerationWorker
 
       subscribers.find_in_batches do |group|
         to_queue = []
+        content_change_ids = Set[]
+
+        group.each do |subscriber|
+          content_change_ids.merge(subscriber.unprocessed_subscription_contents.map(&:content_change_id))
+        end
+
+        content_changes = ContentChange.where(id: content_change_ids.to_a)
 
         Subscriber.transaction do
-          email_ids = import_emails(group).ids
+          email_ids = import_emails(group, content_changes).ids
 
           subscription_contents_to_complete = group_subscription_contents_by_content_change(group)
 
@@ -74,16 +81,16 @@ private
     SubscribersForImmediateEmailQuery.call
   end
 
-  def import_emails(subscribers)
+  def import_emails(subscribers, content_changes)
     email_params = subscribers.flat_map do |subscriber|
       grouped_subscription_contents = subscriber
         .unprocessed_subscription_contents
-        .group_by(&:content_change)
+        .group_by(&:content_change_id)
 
       grouped_subscription_contents.map do |content_change_subscription|
         {
           address: subscriber.address,
-          content_change: content_change_subscription[0],
+          content_change: content_changes.find { |cc| cc.id == content_change_subscription[0] },
           subscriptions: content_change_subscription[1].map(&:subscription)
         }
       end
