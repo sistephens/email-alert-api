@@ -1,10 +1,14 @@
 class SubscribersForImmediateEmailQuery
   def self.call
     Subscriber
-      .joins(subscriptions: { subscription_contents: :content_change })
-      .includes(subscriptions: { unprocessed_subscription_contents: :content_change })
-      .where(subscriptions: { subscription_contents: { email_id: nil } })
-      .where.not(address: nil)
-      .distinct
+      .includes(subscriptions: :unprocessed_subscription_contents)
+      .where(
+        SubscriptionContent
+          .joins(:subscription)
+          .where(email_id: nil)
+          .where("subscriptions.subscriber_id = subscribers.id")
+          .exists
+       )
+       .where.not(address: nil)
   end
 end

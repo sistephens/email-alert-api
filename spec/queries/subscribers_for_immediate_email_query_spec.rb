@@ -32,6 +32,10 @@ RSpec.describe SubscribersForImmediateEmailQuery do
 
     create(:subscription_content, email: create(:email), subscription: create(:subscription, subscriber: subscriber))
 
+    content_change = ContentChange.last
+    create(:subscription_content, subscription: create(:subscription, subscriber: subscriber), content_change: content_change)
+    create(:subscription_content, subscription: create(:subscription, subscriber: subscriber), content_change: content_change)
+
     expect(described_class.call.count).to eq(1)
   end
 end
