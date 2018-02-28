@@ -47,7 +47,9 @@ fab $environment emailalertapi.deliver_test_email:'email.address@digital.cabinet
 You should not receive an email
 
 ### 2) Confirm email drop off on grafana
+
 [Staging dashboard](https://grafana.staging.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1)
+
 [Production](https://grafana.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1)
 
 ### 3) Confirm pseudo delivery "worked"
