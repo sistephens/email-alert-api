@@ -62,8 +62,9 @@ fab $environment emailalertapi.truncate_tables
 ```
 
 ## Backup the db
- - ssh postgresql-primary-1.staging
- - sudo -upostgres pg_dump email-alert-api > pre_migration_backup.sql
+```
+fab $environment -H postgresql-primary-1 do:'sudo -upostgres pg_dump email-alert-api_production > pre_migration_backup.sql
+```
 
 ## Import all the data
   - scp file onto $machineclass-1.staging:/var/apps/email-alert-api/govdelivery_subscriptions.csv
