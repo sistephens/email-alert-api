@@ -3,9 +3,10 @@
   - cd into your fabric script directory
   - download the Gov Delivery files and virus scan, unzip
     If you need the ftp server and log in details, they are in the 2ndline
-    password store under `govdelivery/ftps`
+    password store under `govdelivery/ftps`. Unzipping the files will also
+    require a password which is under `govdelivery/zipfile'.
   - activate fabric virtual env
-  - announce in 2ndline that you are going to deploy
+  - announce in slack #2ndline that you are going to deploy
 
 ## Set env var
 
@@ -137,7 +138,7 @@ fab $environment class:$machineclass puppet.enable
 
 feeling paranoid? test with
 ```
-fab $environment class:$machineclass puppet.check_disabled)
+fab $environment class:$machineclass puppet.check_disabled
 ```
 
 ## Remove the zip and csv files from GovDelivery from your local machine
@@ -147,4 +148,4 @@ rm filenames
 ```
 
 
-## Announce in 2ndline that you are done
+## Announce in slack #2ndline that you are done
