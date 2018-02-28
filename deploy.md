@@ -10,7 +10,7 @@
 
 ```
 export environment=staging
-export machineclass=backend
+export machineclass=email-alert-api
 ```
 
 ## Stop puppet
@@ -36,27 +36,36 @@ fab $environment class:$machineclass app.restart:email-alert-api-procfile-worker
 fab $environment class:$machineclass app.restart:email-alert-api
 ```
 
-confirm notify not receiving email messages by manually sending an email in prod
- - Jenkins run rake task on prod - deliver:to_test_email[email.address@digital.cabinet-office.gov.uk]
-   - https://deploy.staging.publishing.service.gov.uk/job/run-rake-task/parambuild/?TARGET_APPLICATION=email-alert-api&MACHINE_CLASS=backend&RAKE_TASK=deliver:to_test_email[email.address@digital.cabinet-office.gov.uk]
- - confirm email drop off on grafana
- - confirm pseudo delivery "worked"
-    - fab $environment -H $machineclass-1 do:'tail -n 15 /var/apps/email-alert-api/log/pseudo_email.log'
+## Confirm emails are not going through Notify
 
-Delete the data
- - Jenkins run rake task on prod - deploy:truncate_tables
-    - https://deploy.staging.publishing.service.gov.uk/job/run-rake-task/parambuild/?TARGET_APPLICATION=email-alert-api&MACHINE_CLASS=backend&RAKE_TASK=deploy:truncate_tables
-backup the db
+### 1) Manually send an email:
+
+```
+fab $environment emailalertapi.deliver_test_email:'email.address@digital.cabinet-office.gov.uk'
+```
+
+You should not receive an email
+
+### 2) Confirm email drop off on grafana
+[Staging dashboard](https://grafana.staging.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1)
+[Production](https://grafana.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1)
+
+### 3) Confirm pseudo delivery "worked"
+
+```
+fab $environment -H $machineclass-1 do:'tail -n 15 /var/apps/email-alert-api/log/pseudo_email.log'
+```
+
+## Delete the data
+```
+fab $environment emailalertapi.deliver_test_email:'email.address@digital.cabinet-office.gov.uk'
+```
+
+## Backup the db
  - ssh postgresql-primary-1.staging
  - sudo -upostgres pg_dump email-alert-api > pre_migration_backup.sql
 
-Import all the data
-  (
-  - ssh $machineclass-1.staging
-  - cd /var/apps/email-alert-api
-  - ftp get ftp credentials
-  )
-
+## Import all the data
   - scp file onto $machineclass-1.staging:/var/apps/email-alert-api/govdelivery_subscriptions.csv
   - scp file onto $machineclass-1.staging:/var/apps/email-alert-api/govdelivery_digests.csv
   - ssh $machineclass-1.staging
