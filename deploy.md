@@ -72,8 +72,13 @@ fab $environment -H postgresql-primary-1 do:'sudo -upostgres pg_dump email-alert
   - scp file onto $machineclass-1.staging:/var/apps/email-alert-api/govdelivery_subscriptions.csv
   - scp file onto $machineclass-1.staging:/var/apps/email-alert-api/govdelivery_digests.csv
   - ssh $machineclass-1.staging
-  - cd /var/apps/email-alert-api
-  - sudo -u deploy govuk_setenv email-alert-api bundle exec rake import_govdelivery_csv[govdelivery_subscriptions.csv,govdelivery_digests.csv]
+
+```
+cd /var/apps/email-alert-api
+sudo -su deploy
+tmux
+govuk_setenv email-alert-api bundle exec rake import_govdelivery_csv[govdelivery_subscriptions.csv,govdelivery_digests.csv]
+```
 
 ## Pause while everything imports
 - COULD DO WITH BEEFING THIS UP
