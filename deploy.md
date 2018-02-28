@@ -88,9 +88,17 @@ govuk_setenv email-alert-api bundle exec rake import_govdelivery_csv[govdelivery
 ```
 
 ## Pause while everything imports
-- COULD DO WITH BEEFING THIS UP
-- sense check that the subscriptions are in the right ballpark 3 million
-- sense check that the subscribers are in the right ballpark 500k
+
+Roughly 2 hours as at 28/02
+
+## Sense check table sizes
+
+Subscriptions should be in the 3 million ballpark
+Subscribers should be in the 500k ballpark
+
+```
+fab $environment emailalertapi.table_counts
+```
 
 ## Set email provider to use Notify, use the Email alert frontend for collection and disable GovDelivery
 
