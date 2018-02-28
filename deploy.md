@@ -92,8 +92,7 @@ govuk_setenv email-alert-api bundle exec rake import_govdelivery_csv[govdelivery
 - sense check that the subscriptions are in the right ballpark 3 million
 - sense check that the subscribers are in the right ballpark 500k
 
-## Set email provider to use Notify, use the Email alert frontend for collection
-and disable GovDelivery
+## Set email provider to use Notify, use the Email alert frontend for collection and disable GovDelivery
 
 ```
 fab $environment class:$machineclass app.setenv:app=email-alert-api,name=EMAIL_SERVICE_PROVIDER,value=NOTIFY
