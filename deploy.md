@@ -1,10 +1,11 @@
 ## Prerequisites
 
+  - cd into your fabric script directory
   - download the Gov Delivery files and virus scan, unzip
     If you need the ftp server and log in details, they are in the 2ndline
     password store under `govdelivery/ftps`
   - activate fabric virtual env
-  - cd into your fabric script directory
+  - announce in 2ndline that you are going to deploy
 
 ## Set env var
 
@@ -36,7 +37,7 @@ fab $environment class:$machineclass app.restart:email-alert-api-procfile-worker
 fab $environment class:$machineclass app.restart:email-alert-api
 ```
 
-## Confirm emails are not going through Notify
+## Confirm emails are *not* going through Notify
 
 ### 1) Manually send an email:
 
@@ -55,7 +56,7 @@ You should not receive an email
 ### 3) Confirm pseudo delivery "worked"
 
 ```
-fab $environment -H $machineclass-1 do:'tail -n 15 /var/apps/email-alert-api/log/pseudo_email.log'
+fab $environment class:email-alert-api do:'[ -f "/var/apps/email-alert-api/log/pseudo_email.log" ]; tail -n 15 /var/apps/email-alert-api/log/pseudo_email.log || echo 0'
 ```
 
 ## Delete the data
@@ -65,17 +66,23 @@ fab $environment emailalertapi.truncate_tables
 
 ## Backup the db
 ```
-fab $environment -H postgresql-primary-1 do:'sudo -upostgres pg_dump email-alert-api_production > pre_migration_backup.sql
+fab $environment -H postgresql-primary-1 do:'sudo -upostgres pg_dump email-alert-api_production > pre_migration_backup.sql'
 ```
 
 ## Import all the data
-  - scp file onto $machineclass-1.staging:/var/apps/email-alert-api/govdelivery_subscriptions.csv
-  - scp file onto $machineclass-1.staging:/var/apps/email-alert-api/govdelivery_digests.csv
-  - ssh $machineclass-1.staging
+
+### SCP files up
+```
+scp uk_gov_subscribers.csv $machineclass-1.$environment:/var/apps/email-alert-api/govdelivery_subscriptions.csv
+scp ukgov_subscriber_digest.csv $machineclass-1.$environment:/var/apps/email-alert-api/govdelivery_digests.csv
+```
+
+### ssh, tmux and go
 
 ```
+ssh $machineclass-1.$environment
+sudo su - deploy
 cd /var/apps/email-alert-api
-sudo -su deploy
 tmux
 govuk_setenv email-alert-api bundle exec rake import_govdelivery_csv[govdelivery_subscriptions.csv,govdelivery_digests.csv]
 ```
@@ -101,8 +108,19 @@ fab $environment class:$machineclass app.restart:email-alert-api
 fab $environment class:$machineclass app.restart:email-alert-api-procfile-worker
 ```
 
-confirm notify receiving email messages by manually sending an email in prod
- - deliver:to_test_email[email.addresse@digital.cabinet-office.gov.uk]
+## Confirm notify receiving email messages by manually sending an email in prod
+
+```
+fab $environment emailalertapi.deliver_test_email:'email.address@digital.cabinet-office.gov.uk'
+```
+
+You should receive an email!
+
+### Check the dashboards
+
+[Staging dashboard](https://grafana.staging.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1)
+
+[Production](https://grafana.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1)
 
 ## Re-start puppet
 
@@ -114,3 +132,12 @@ feeling paranoid? test with
 ```
 fab $environment class:$machineclass puppet.check_disabled)
 ```
+
+## Remove the zip and csv files from GovDelivery from your local machine
+
+```
+rm filenames
+```
+
+
+## Announce in 2ndline that you are done
