@@ -1,6 +1,8 @@
 ## Prerequisites
 
   - download the Gov Delivery files and virus scan, unzip
+    If you need the ftp server and log in details, they are in the 2ndline
+    password store under `govdelivery/ftps`
   - activate fabric virtual env
   - cd into your fabric script directory
 
