@@ -58,7 +58,7 @@ fab $environment -H $machineclass-1 do:'tail -n 15 /var/apps/email-alert-api/log
 
 ## Delete the data
 ```
-fab $environment emailalertapi.deliver_test_email:'email.address@digital.cabinet-office.gov.uk'
+fab $environment emailalertapi.truncate_tables
 ```
 
 ## Backup the db
