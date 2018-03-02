@@ -88,9 +88,39 @@ tmux
 govuk_setenv email-alert-api bundle exec rake import_govdelivery_csv[govdelivery_subscriptions.csv,govdelivery_digests.csv]
 ```
 
+You can detatch from the tmux session with `ctrl-b d` and then exit the ssh as
+per normal.
+
+Any other developer can look in on the progress by sshing on to the relevant
+machine and:
+
+```
+sudo su - deploy
+tmux list-sessions
+```
+The output will be something like:
+
+```
+> 0: 1 windows (created Fri Mar  2 13:29:29 2018) [142x36] (attached)
+```
+
+take note of the session number (will probably be 0) - the first number listed
+
+```
+tmux a -t 0
+```
+
+Where "0" is the session number.
+
 ## Pause while everything imports
 
 Roughly 2 hours as at 28/02
+
+## Exit your tmux if you are happy
+
+`ctrl-b x` and confirm to terminate your tmux session.
+
+Exit the ssh session as per normal.
 
 ## Sense check table sizes
 
