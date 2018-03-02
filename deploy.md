@@ -40,7 +40,13 @@ fab $environment class:$machineclass app.restart:email-alert-api
 
 ## Confirm emails are *not* going through Notify
 
-### 1) Manually send an email:
+### 1) Get your dashboards up and note any activity
+
+[Staging dashboard](https://grafana.staging.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1)
+
+[Production](https://grafana.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1)
+
+### 2) Manually send an email:
 
 ```
 fab $environment emailalertapi.deliver_test_email:'email.address@digital.cabinet-office.gov.uk'
@@ -48,11 +54,8 @@ fab $environment emailalertapi.deliver_test_email:'email.address@digital.cabinet
 
 You should not receive an email
 
-### 2) Confirm email drop off on grafana
-
-[Staging dashboard](https://grafana.staging.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1)
-
-[Production](https://grafana.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1)
+Check the dashboards. Optionally wait for a minute or two to ensure no email was
+sent.
 
 ### 3) Confirm pseudo delivery "worked"
 
