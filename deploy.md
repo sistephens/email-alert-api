@@ -1,11 +1,11 @@
 ## Prerequisites
 
-  - cd into your fabric script directory
   - download the Gov Delivery files and virus scan, unzip
     If you need the ftp server and log in details, they are in the 2ndline
     password store under `govdelivery/ftps`. Unzipping the files will also
     require a password which is under `govdelivery/zipfile'.
-  - activate fabric virtual env
+  - cd into your fabric script directory
+  - activate fabric virtual env if you use it
   - announce in slack #2ndline that you are going to deploy
 
 ## Set env var
