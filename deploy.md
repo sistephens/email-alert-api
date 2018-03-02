@@ -180,5 +180,14 @@ fab $environment class:$machineclass puppet.check_disabled
 rm filenames
 ```
 
+## Delete the backup you took
+
+If you are confident all went to plan
+
+```
+ssh $machineclass-1.$environment
+rm pre_migration_backup.sql
+exit
+```
 
 ## Announce in slack #2ndline that you are done
