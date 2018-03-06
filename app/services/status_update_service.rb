@@ -56,9 +56,9 @@ private
                 .lock
                 .find(reference)
 
-    if !attempt.sending?
-      raise DeliveryAttemptStatusConflictError, "Status update already received"
-    end
+    # if !attempt.sending?
+    #   raise DeliveryAttemptStatusConflictError, "Status update already received"
+    # end
 
     attempt
   end
