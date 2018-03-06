@@ -70,7 +70,7 @@ fab $environment emailalertapi.truncate_tables
 
 ## Backup the db
 ```
-fab $environment -H postgresql-primary-1 do:'sudo -upostgres pg_dump email-alert-api_production > pre_migration_backup.sql'
+fab $environment -H postgresql-primary-1 do:'sudo -upostgres pg_dump email-alert-api_production > pre_migration_backup.sql && head -n 30 pre_migration_backup.sql'
 ```
 
 ## Import all the data
