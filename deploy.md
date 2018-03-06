@@ -191,3 +191,57 @@ exit
 ```
 
 ## Announce in slack #2ndline that you are done
+
+# Back out
+
+If it's all gone wrong and you need to revert to using GovDelivery then....
+
+## Prerequisites
+
+  - cd into your fabric script directory and `git pull` on master
+  - activate fabric virtual env if you use it
+  - announce in slack #2ndline that you are going to deploy
+
+## Set env var
+
+```
+export environment=staging
+export machineclass=email-alert-api
+```
+
+## Stop puppet
+
+```
+fab $environment class:$machineclass puppet.disable:"Email alert api deployment"
+```
+
+Feeling paranoid? test with
+```
+fab $environment class:$machineclass puppet.check_disabled
+```
+
+## Set email provider to use Pseudo, remove the env vars that switch frontend and disable GovDelivery
+
+```
+fab $environment class:$machineclass app.setenv:app=email-alert-api,name=EMAIL_SERVICE_PROVIDER,value=PSEUDO
+fab $environment class:$machineclass app.rmenv:app=email-alert-api,name=USE_EMAIL_ALERT_FRONTEND_FOR_EMAIL_COLLECTION
+fab $environment class:$machineclass app.rmenv:app=email-alert-api,name=DISABLE_GOVDELIVERY_EMAILS
+```
+
+## Restart app and procfile workers
+
+```
+fab $environment class:$machineclass app.restart:email-alert-api
+fab $environment class:$machineclass app.restart:email-alert-api-procfile-worker
+```
+
+## Re-start puppet
+
+```
+fab $environment class:$machineclass puppet.enable
+```
+
+feeling paranoid? test with
+```
+fab $environment class:$machineclass puppet.check_disabled
+```
