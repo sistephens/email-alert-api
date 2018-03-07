@@ -150,6 +150,13 @@ fab $environment class:$machineclass app.restart:email-alert-api
 fab $environment class:$machineclass app.restart:email-alert-api-procfile-worker
 ```
 
+also restart content performance manager if you had to stop their procfile
+workers in prod because they were using all the sql ever.
+
+```
+fab $environment class:$machineclass app.start:content-performance-manager-publishing-api-worker-procfile-worker
+```
+
 ## Confirm notify receiving email messages by manually sending an email in prod
 
 ```
