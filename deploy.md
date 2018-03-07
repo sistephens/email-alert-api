@@ -7,6 +7,7 @@
   - cd into your fabric script directory
   - activate fabric virtual env if you use it
   - announce in slack #2ndline that you are going to deploy
+  - get your dashboard up [Staging dashboard](https://grafana.staging.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1), [Production](https://grafana.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1)
 
 ## Set env var
 
@@ -40,7 +41,7 @@ fab $environment class:$machineclass app.restart:email-alert-api
 
 ## Confirm emails are *not* going through Notify
 
-### 1) Get your dashboards up and note any activity
+### 1) Note any activity on dashboards
 
 [Staging dashboard](https://grafana.staging.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1)
 
@@ -54,7 +55,7 @@ fab $environment emailalertapi.deliver_test_email:'email.address@digital.cabinet
 
 You should not receive an email
 
-Check the dashboards. Optionally wait for a minute or two to ensure no email was
+Check the dashboard an email should be registered. Optionally wait for a minute or two to ensure no email was
 sent.
 
 ### 3) Confirm pseudo delivery "worked"
@@ -157,6 +158,14 @@ fab $environment emailalertapi.deliver_test_email:'email.address@digital.cabinet
 
 You should receive an email!
 
+
+### Look at the frontend
+
+Staging: [Email alert subscription for publications](https://www-origin.staging.publishing.service.gov.uk/government/email-signup/new?email_signup%5Bfeed%5D=https%3A%2F%2Fwww.gov.uk%2Fgovernment%2Fpublications.atom)
+Production: [Email alert subscription for publications](https://www.gov.uk/government/email-signup/new?email_signup%5Bfeed%5D=https%3A%2F%2Fwww.gov.uk%2Fgovernment%2Fpublications.atom)
+
+You should see the new subscription interface on GOV.UK not on GovDelivery.
+
 ### Check the dashboards
 
 [Staging dashboard](https://grafana.staging.publishing.service.gov.uk/dashboard/file/email_alert_api.json?refresh=10s&orgId=1)
@@ -178,6 +187,16 @@ fab $environment class:$machineclass puppet.check_disabled
 
 ```
 rm filenames
+```
+
+## Remove the csv files from the remote
+
+```
+ssh $machineclass-1.$environment
+cd /var/apps/email-alert-api
+rm govdelivery_subscriptions.csv
+rm govdelivery_digests.csv
+exit
 ```
 
 ## Delete the backup you took
