@@ -65,6 +65,9 @@ RSpec.describe SubscriptionContentWorker do
         .to receive(:call)
         .with([hash_including(address: subscriber.address)])
         .and_return(double(ids: [0]))
+      #binding.pry
+      puts "Sidekiq inline?: #{Sidekiq::Testing.inline?}"
+      puts "----------------------"
 
       subject.perform(content_change.id)
     end
