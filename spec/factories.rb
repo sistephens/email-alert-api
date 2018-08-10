@@ -112,6 +112,10 @@ FactoryBot.define do
     trait :medical_safety_alert do
       tags format: ["medical_safety_alert"], alert_type: %w(devices drugs field-safety-notices company-led-drugs)
     end
+
+    trait :taxon_links do
+      links taxon_tree: [SecureRandom.uuid]
+    end
   end
 
   factory :subscription do
