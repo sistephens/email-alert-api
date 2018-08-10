@@ -21,6 +21,7 @@ class UnpublishHandlerService
   end
 
 private
+
   attr_reader :content_id
 
   def includes_taxon_unpublishing?

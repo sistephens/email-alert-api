@@ -70,8 +70,7 @@ RSpec.describe UnpublishHandlerService do
       end
 
       it "doesn't create email if subscriber is deactivated" do
-        expect { described_class.call(@content_id) }
-        .to_not change { Email.count }
+        expect { described_class.call(@content_id) }.to_not(change { Email.count })
       end
     end
 

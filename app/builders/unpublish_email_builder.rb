@@ -12,6 +12,7 @@ class UnpublishEmailBuilder
   end
 
 private
+
   attr_reader :email_params
 
   def columns

@@ -1,5 +1,3 @@
-# rubocop:disable Layout/EmptyLinesAroundArguments
-
 RSpec.describe UnpublishEmailBuilder do
   describe ".call" do
     let(:subscriber) {
@@ -61,5 +59,3 @@ RSpec.describe UnpublishEmailBuilder do
     end
   end
 end
-
-# rubocop:enable Layout/EmptyLinesAroundArguments
